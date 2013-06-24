@@ -8,8 +8,22 @@
 	var Module = angular.module('25th.utils');
 	Module.factory('Ajax', ['$http', function ($http) {
 
+		var _scope;
+
 		/** A service for making XHR calls. */
 		var Ajax = {};
+
+		/**
+		 * Executes the next call to send in the given $scope.
+		 *
+		 * @param {Object} scope The $scope.
+		 *
+		 * @returns {Ajax} The original Ajax object.
+		 */
+		Ajax.in = function (scope) {
+			_scope = scope;
+			return Ajax;
+		};
 
 		/**
 		 * Sends an AJAX request to the given url. When the request has finished,
@@ -39,19 +53,8 @@
 				params  = params  || {};
 			}
 
-			var config = {
-				method  : method,
-				url     : url,
-				timeout : params.timeout * 1000
-			};
-
-			if (method === 'PUT' || method === 'POST') {
-				config.data = params;
-			} else {
-				config.params = params;
-			}
-
-			$http(config).success(success).error(error);
+			send (method, url, params, success, error, _scope || {});
+			_scope = null;
 		};
 
 		/**
@@ -151,6 +154,42 @@
 		};
 
 		// Internal Helper Functions   ----------------------------------------
+
+		/**
+		 * Actually sends the AJAX request.
+		 *
+		 * @param {String}   method  One of 'get', 'post', 'put' or 'delete'.
+		 * @param {String}   url     The URL to send the request to.
+		 * @param {Object}   params  Optional parameters to send with the request.
+		 * @param {Function} success An optional function to call, when the
+		 *                           request has finished successfully.
+		 * @param {Function} error   An optional function to call, when the
+		 *                           request has finished with an error.
+		 * @param {Object}   scope   The target scope which calls this function.
+		 */
+		function send(method, url, params, success, error, scope) {
+			var config = {
+				method  : method,
+				url     : url,
+				timeout : params.timeout * 1000
+			};
+
+			if (method === 'PUT' || method === 'POST') {
+				config.data = params;
+			} else {
+				config.params = params;
+			}
+
+			scope.loading = true;
+			$http(config)
+				.success(function (data) {
+					scope.loading = false;
+					success(data);
+				}).error(function (data) {
+					scope.loading = false;
+					error(data);
+				});
+		}
 
 		/**
 		 * Returns the current unix timestamp. If no date is specified, the
