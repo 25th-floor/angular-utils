@@ -168,6 +168,9 @@
 		 * @param {Object}   scope   The target scope which calls this function.
 		 */
 		function send(method, url, params, success, error, scope) {
+			scope.loading = true;
+			scope.error = null;
+
 			var config = {
 				method  : method,
 				url     : url,
@@ -180,7 +183,6 @@
 				config.params = params;
 			}
 
-			scope.loading = true;
 			$http(config)
 				.success(Utils.bind(handleResponse, scope, success, error))
 				.error(Utils.bind(handleResponse, scope, success, error));
@@ -197,6 +199,7 @@
 		function isSuccess(status, data) {
 			if (status >= 300) return false;
 			if (data.success === false) return false;
+			if (data.error) return false;
 
 			return true;
 		}
@@ -218,7 +221,7 @@
 			if (isSuccess(status, data)) {
 				success(data);
 			} else {
-				scope.errorMessage = data.errorMessage || '';
+				scope.error = data.error;
 				error(data);
 			}
 		}
