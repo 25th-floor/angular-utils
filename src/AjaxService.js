@@ -6,7 +6,7 @@
 	/** @const */ var POLL_INTERVAL = 1000;
 
 	var Module = angular.module('25th.utils');
-	Module.factory('Ajax', ['$http', function ($http) {
+	Module.factory('Ajax', ['$http', 'Utils', function ($http, Utils) {
 
 		var _scope;
 
@@ -182,13 +182,45 @@
 
 			scope.loading = true;
 			$http(config)
-				.success(function (data) {
-					scope.loading = false;
-					success(data);
-				}).error(function (data) {
-					scope.loading = false;
-					error(data);
-				});
+				.success(Utils.bind(handleResponse, scope, success, error))
+				.error(Utils.bind(handleResponse, scope, success, error));
+		}
+
+		/**
+		 * Determines whether the given response data is a success or an error.
+		 *
+		 * @param {Number} status The response status code.
+		 * @param {Object} data   The response body.
+		 *
+		 * @returns {boolean} True if the response is successful; otherwise false.
+		 */
+		function isSuccess(status, data) {
+			if (status >= 300) return false;
+			if (data.success === false) return false;
+
+			return true;
+		}
+
+		/**
+		 * Checks whether the response is successful and invokes the right
+		 * response handler.
+		 *
+		 * @param {Function} success A function to call, when the request has
+		 *                           finished successfully.
+		 * @param {Function} error   A function to call, when the request has
+		 *                           finished with an error.
+		 * @param {Object}   data    The response body.
+		 * @param {Number}   status  The response status code.
+		 */
+		function handleResponse (scope, success, error, data, status) {
+			scope.loading = false;
+
+			if (isSuccess(status, data)) {
+				success(data);
+			} else {
+				scope.errorMessage = data.errorMessage || '';
+				error(data);
+			}
 		}
 
 		/**
