@@ -20,7 +20,7 @@
 		 *
 		 * @returns {Ajax} The original Ajax object.
 		 */
-		Ajax.in = function (scope) {
+		Ajax.inScope = function (scope) {
 			_scope = scope;
 			return Ajax;
 		};
@@ -149,7 +149,7 @@
 		 * @param {Function}          [error]   An optional function to call, when the
 		 *                                      request has finished with an error.
 		 */
-		Ajax.delete = function (url, params, success, error) {
+		Ajax.doDelete = function (url, params, success, error) {
 			Ajax.send('delete', url, params, success, error);
 		};
 
