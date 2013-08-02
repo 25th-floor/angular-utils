@@ -1,6 +1,6 @@
 {
 	"name"         : "25th-angular-utils",
-	"version"      : "0.2.3",
+	"version"      : "0.2.4",
 
 	"dependencies" : {
 		"angular" : "1.0",
