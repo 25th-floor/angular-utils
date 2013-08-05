@@ -4,7 +4,7 @@
 
 	var Module = angular.module('25th.utils');
 	Module.filter('newline', function(text){
-		return text.replace(/\n/g, '<br/>');
+		return (text || '').replace(/\n/g, '<br/>');
 	});
 
 }(angular);
