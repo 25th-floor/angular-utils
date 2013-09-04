@@ -44,6 +44,15 @@
 			};
 		};
 
+		/**
+		 * Redirects the current browser window to the given url.
+		 *
+		 * @param {String} url The target url.
+		 */
+		Utils.redirect = function redirect(url) {
+			location.href = url;
+		};
+
 		return Utils;
 
 	}]);
