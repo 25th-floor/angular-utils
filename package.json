@@ -1,0 +1,22 @@
+{
+  "name": "angular-utils",
+  "version": "0.2.9",
+  "description": "angular utils",
+  "main": "Module.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/25th-floor/angular-utils.git"
+  },
+  "keywords": [
+    "angular"
+  ],
+  "author": "25th-floor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/25th-floor/angular-utils/issues"
+  },
+  "homepage": "https://github.com/25th-floor/angular-utils#readme"
+}
